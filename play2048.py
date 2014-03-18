@@ -6,7 +6,7 @@ from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from random import choice
-
+import argparse
 
 class Session(object):
     def __init__(self):
@@ -57,11 +57,16 @@ def critical_error(message):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('method', help='Choose random or ordered method of play.', choices=['random','ordered'])
+    args = parser.parse_args()
+    args = vars(args)
+
     current_session = Session()
     current_session.browser.get('http://gabrielecirulli.github.io/2048/')
-    play_2048(current_session, current_session.browser)
+    play_2048(current_session, current_session.browser, args)
 
-def play_2048(session, browser):
+def play_2048(session, browser, args):
     xpath = {
     'gameboard' : '//div[@class="game-container"]',
     'gameover' : '//div[@class="game-message game-over"]',
@@ -72,12 +77,25 @@ def play_2048(session, browser):
 
     session.click_on_element(xpath['gameboard'])
 
-    while session.element_exists(xpath['gameboard']) is True:
-        if session.element_exists(xpath['gameover']) is not True:
-            command = choice(command_list)
-            session.type_keys(xpath['gameboard'],command)
-        else:
-            session.click_on_element(xpath['retry'])
+    if args['method'] == 'random':
+        while session.element_exists(xpath['gameboard']) is True:
+            if session.element_exists(xpath['gameover']) is not True:
+                command = choice(command_list)
+                session.type_keys(xpath['gameboard'],command)
+            else:
+                session.click_on_element(xpath['retry'])
+
+    elif args['method'] == 'ordered':
+        while session.element_exists(xpath['gameboard']) is True:
+            if session.element_exists(xpath['gameover']) is not True:
+                for command in command_list:
+                    session.type_keys(xpath['gameboard'],command)
+            else:
+                session.click_on_element(xpath['retry'])
+
+    else:
+        critical_error('Game method not available option. Check method argument choices against actual game methods.')
+
 
 if __name__=="__main__":
     main()
