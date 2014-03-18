@@ -10,7 +10,9 @@ Run from command line:
 
 python play2048.py [GAME METHOD]
 
+
 Current game methods:
 
-*random
-*ordered
++random
+
++ordered
