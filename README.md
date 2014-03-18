@@ -8,8 +8,9 @@ How To
 
 Run from command line:
 
+```bash
 python play2048.py [GAME METHOD]
-
+```
 
 Current game methods:
 
