@@ -13,6 +13,6 @@ python play2048.py [GAME METHOD]
 
 Current game methods:
 
-+random
+* random
 
-+ordered
+* ordered
