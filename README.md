@@ -14,6 +14,8 @@ python play2048.py [GAME METHOD]
 
 Current game methods:
 
-* random
+* random (chooses directions at random)
 
-* ordered
+* ordered (iterates up, right, down, left in order continuously)
+
+* preferred (tries to move down if able, then right, then left, then up)
