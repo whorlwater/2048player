@@ -119,6 +119,16 @@ def play_2048(session, browser, args):
     def merged_tiles():
         return session.get_details(xpath['merged_tiles'], 'attribute', 'all', 'class')
 
+    def tiles_did_not_move(initial_new_tiles, initial_merged_tiles):
+        while True:
+            try:
+                if new_tiles() == initial_new_tiles and merged_tiles() == initial_merged_tiles:
+                    return True
+                else:
+                    return False
+            except StaleElementReferenceException:
+                pass
+
     if args['method'] == 'random':
         while gameboard_exists() is True:
             if game_is_over() is not True:
@@ -138,14 +148,14 @@ def play_2048(session, browser, args):
     elif args['method'] == 'preferred':
         while gameboard_exists() is True:
             if game_is_over() is not True:
-                initial_new_tiles = new_tiles()
-                initial_merged_tiles = merged_tiles()
+                current_new_tiles = new_tiles()
+                current_merged_tiles = merged_tiles()
                 move(down)
-                if new_tiles() == initial_new_tiles and merged_tiles() == initial_merged_tiles:
+                if tiles_did_not_move(current_new_tiles, current_merged_tiles) is True:
                     move(left)
-                    if new_tiles() == initial_new_tiles and merged_tiles() == initial_merged_tiles:
+                    if tiles_did_not_move(current_new_tiles, current_merged_tiles) is True:
                         move(right)
-                        if new_tiles() == initial_new_tiles and merged_tiles() == initial_merged_tiles:
+                        if tiles_did_not_move(current_new_tiles, current_merged_tiles) is True:
                             move(up)
             else:
                 retry()
